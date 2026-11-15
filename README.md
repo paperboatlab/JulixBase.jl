@@ -6,6 +6,7 @@ Paperboat; it does not plot, solve or integrate.
 ```
 clear() / clear(:x)          -> a session event: the kernel resets the session (or drops x)
 clc()                        -> a session event: the app clears its console
+open_example(index_or_name)  -> a session event: the app opens a shipped example read-only
 optimize(problem)            -> an LP/QP/NLP for Paperboat's optimization toolkit (schema/)
 simulate(graph; duration…)   -> a graph.run request for a Paperboat backend
 take_events / take_problems / take_runs / reset_queues!   -> what the kernel collects
