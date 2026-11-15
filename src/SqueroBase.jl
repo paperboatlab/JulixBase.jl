@@ -12,7 +12,7 @@ module SqueroBase
 
 using JSON3
 
-export clear, clc
+export clear, clc, open_example
 export optimize, OptimizationProblem, problem_json
 export simulate, SimulationRequest, run_json
 export take_events, take_problems, take_runs, reset_queues!

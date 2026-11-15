@@ -8,12 +8,23 @@ using Aqua
 @testset "session events" begin
     reset_queues!()
     clear(); clear(:x, "y"); clc()
+    open_example(); open_example(2); open_example(" 01-signals "); open_example(:lorenz)
     events = take_events()
-    @test [e["type"] for e in events] == ["clear", "clear", "clc"]
+    @test [e["type"] for e in events] == ["clear", "clear", "clc", "open_example", "open_example", "open_example", "open_example"]
     @test !haskey(events[1], "names")
     @test events[2]["names"] == ["x", "y"]
+    @test events[4]["index"] == 1
+    @test events[5]["index"] == 2
+    @test events[6]["name"] == "01-signals"
+    @test events[7]["name"] == "lorenz"
     @test isempty(take_events())          # taken once
-    @test clear() === nothing && clc() === nothing
+    @test clear() === nothing && clc() === nothing && open_example(1) === nothing
+    @test_throws ArgumentError open_example(0)
+    @test_throws ArgumentError open_example(-3)
+    @test_throws ArgumentError open_example(true)
+    @test_throws ArgumentError open_example("")
+    @test_throws ArgumentError open_example("   ")
+    @test_throws ArgumentError open_example(Symbol(""))
     reset_queues!()
     @test isempty(take_events())
 end
