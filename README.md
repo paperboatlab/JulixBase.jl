@@ -36,4 +36,4 @@ the same shapes, so a field change fails on both sides.
 
 ## License
 
-Apache License 2.0 (see [LICENSE](LICENSE)).
+Mozilla Public License Version 2.0 (see [LICENSE](LICENSE)).
