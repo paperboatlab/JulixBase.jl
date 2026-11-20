@@ -1,6 +1,6 @@
-# The simulation bridge: a `graph.run` request for a Paperboat backend (`paperboat/0`). The graph's
+# The simulation bridge: a `graph.run` request for a Paperboat station (`paperboat/0`). The graph's
 # blocks (state_space, transfer_fn, rhs, …) and their solvers are Paperboat's; SqueroBase only
-# packages the request, with matrices as rows. The app sends it to the attached backends.
+# packages the request, with matrices as rows. The app sends it to the attached stations.
 
 const RUNS = Any[]
 
@@ -9,7 +9,7 @@ take_runs() = (out = copy(RUNS); empty!(RUNS); out)
 
 const SOLVERS = ("rk4", "rk45", "rk2", "euler", "discrete", "cvode", "ida")
 
-"""A `graph.run` message for a Paperboat backend."""
+"""A `graph.run` message for a Paperboat station."""
 struct SimulationRequest
     data::Dict{String, Any}
 end
@@ -23,8 +23,8 @@ run_json(r::SimulationRequest) = JSON3.write(r.data)
 """
     simulate(graph; duration, dt, solver, speed, variables) -> SimulationRequest
 
-Queue a run of a Paperboat graph (`nodes`, `edges`; a NamedTuple or Dict in the backend's graph
-shape). Settings left out keep the backend's defaults. `solver` is one of rk4, rk45, rk2, euler,
+Queue a run of a Paperboat graph (`nodes`, `edges`; a NamedTuple or Dict in the station's graph
+shape). Settings left out keep the station's defaults. `solver` is one of rk4, rk45, rk2, euler,
 discrete, cvode, ida. `variables` are sent with the run (matrices as rows).
 """
 function simulate(graph; duration = nothing, dt = nothing, solver = nothing, speed = nothing, variables = nothing)

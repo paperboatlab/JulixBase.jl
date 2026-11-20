@@ -3,7 +3,7 @@
 
 The session layer of Squero Studio MX: `clear`/`clc` session events, and the bridges that hand
 work to Paperboat (`optimize` builds a problem for its solver, `simulate` a run request for a
-backend). It does not plot, solve or integrate; plotting is SqueroPlot's, solving and simulation
+station). It does not plot, solve or integrate; plotting is SqueroPlot's, solving and simulation
 are Paperboat's.
 
 The kernel collects what a statement recorded with `take_events`, `take_problems` and `take_runs`.
