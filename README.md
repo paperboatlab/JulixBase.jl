@@ -17,7 +17,7 @@ using SqueroBase
 
 clear()
 optimize(problem)           # LP/QP/NLP specification for Paperboat's optimization toolkit
-simulate(graph; duration=5) # graph.run request for a Paperboat backend
+simulate(graph; duration=5) # graph.run request for a Paperboat station
 ```
 
 ## Check
