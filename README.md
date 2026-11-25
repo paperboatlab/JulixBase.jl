@@ -5,7 +5,7 @@ The Julia session layer of Squero Studio MX for
 optimization problem specifications (`optimize`) and simulation run requests (`simulate`); it does
 not plot, solve or integrate.
 
-**Docs:** <https://paperboatlab.github.io/apps/squero-studio-mx/> and [`schema/`](schema/)
+**Docs:** <https://paperboatlab.org/apps/squero-studio-mx/> and [`schema/`](schema/)
 
 ## Use
 
