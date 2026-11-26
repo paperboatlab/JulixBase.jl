@@ -2,6 +2,19 @@
 # blocks (state_space, transfer_fn, rhs, …) and their solvers are Paperboat's; SqueroBase only
 # packages the request, with matrices as rows. The app sends it to the attached stations.
 
+# Plain data for JSON: names as strings, a matrix as its rows (the shape the C++ readers expect,
+# not JSON3's flat column order).
+_to_dict(x::AbstractDict) = Dict{String, Any}(string(k) => _plain(v) for (k, v) in x)
+_to_dict(x::NamedTuple) = Dict{String, Any}(string(k) => _plain(v) for (k, v) in pairs(x))
+_plain(v::AbstractDict) = _to_dict(v)
+_plain(v::NamedTuple) = _to_dict(v)
+_plain(v::AbstractVector) = [_plain(x) for x in v]
+_plain(v::AbstractMatrix) = [[_plain(v[i, j]) for j in axes(v, 2)] for i in axes(v, 1)]
+_plain(v::Tuple) = [_plain(x) for x in v]
+_plain(v::Symbol) = string(v)
+_plain(v::Function) = throw(ArgumentError("a Julia Function cannot travel to Paperboat: pass its expression as a string"))
+_plain(v) = v
+
 const RUNS = Any[]
 
 """`take_runs()`: the run requests built since the last call (and forget them)."""

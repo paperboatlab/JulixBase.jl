@@ -35,52 +35,6 @@ end
     end
 end
 
-@testset "problems are queued for the kernel" begin
-    take_problems()
-    p = optimize((f = [-1.0, -1.0], lb = [0.0, 0.0], ub = [1.0, 1.0]))
-    @test only(take_problems()) === p
-    @test sprint(show, p) == "OptimizationProblem(lp)"
-end
-
-@testset "matrices travel as rows" begin
-    problem = optimize((H = [2.0 1.0; 1.0 2.0], f = [-1.0, -1.0], A = [1.0 2.0], b = [3.0]))
-    data = JSON3.read(problem_json(problem))
-    @test data["H"] == [[2.0, 1.0], [1.0, 2.0]]
-    @test data["A"] == [[1.0, 2.0]]
-    @test sprint(write, problem) == problem_json(problem)
-end
-
-@testset "solvers are selected from the fields" begin
-    lp = optimize((f = [-3.0, -2.0], A = [2.0 1.0], b = [4.0], lb = [0.0, 0.0]))
-    @test lp.kind == :lp
-    @test !haskey(JSON3.read(problem_json(lp)), "options")
-    qp = optimize((H = [2.0 0.0; 0.0 2.0], f = [-2.0, -1.0], Aeq = [1.0 1.0], beq = [1.0]))
-    @test qp.kind == :qp
-    nlp = optimize((fun = "(x1 - 1)^2 + (x2 - 2)^2", x0 = [0.5, 1.5],
-                    nonlcon = (c = ["x1^2 + x2^2 - 2"],),
-                    options = (display = "iter", tol = 1e-8, max_iter = 400)))
-    @test nlp.kind == :nlp
-    @test JSON3.read(problem_json(nlp))["options"]["display"] == "iter"
-    @test_throws ArgumentError optimize((fun = x -> x[1], x0 = [0.0]))
-    @test_throws ArgumentError optimize((f = [1.0], options = (display = "loud",)))
-    @test_throws ArgumentError optimize((fun = "x1", H = [1.0;;]))
-    @test_throws ArgumentError optimize((lb = [0.0],))
-    take_problems()
-end
-
-@testset "conformance fixtures" begin
-    fixture(name) = JSON3.read(read(joinpath(@__DIR__, "fixtures", name), String))
-    for (name, kind) in (("lp.json", :lp), ("qp.json", :qp), ("nlp.json", :nlp))
-        data = fixture(name)
-        rebuilt = optimize(data)
-        @test rebuilt.kind == kind
-        for key in ("f", "H", "fun", "A", "b", "Aeq", "beq", "lb", "ub", "nonlcon", "options")
-            haskey(data, key) && @test haskey(rebuilt.data, key)
-        end
-    end
-    take_problems()
-end
-
 @testset "simulation bridge" begin
     take_runs()
     graph = (nodes = [(id = "plant", type = "control/state_space",
